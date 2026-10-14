@@ -1,0 +1,563 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky 9 Card Game</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #07150f;
+    color: white;
+}
+
+header {
+    text-align: center;
+    padding: 25px 10px;
+    background: #10291d;
+    border-bottom: 2px solid #d7b45a;
+}
+
+header h1 {
+    margin: 0;
+    color: #e8c76b;
+    letter-spacing: 4px;
+}
+
+header p {
+    color: #b6c8bb;
+    font-size: 13px;
+}
+
+.container {
+    width: 92%;
+    max-width: 850px;
+    margin: 25px auto;
+}
+
+.balance-box {
+    background: #10291d;
+    border: 1px solid #b89545;
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.balance-box p {
+    color: #b6c8bb;
+    margin: 0 0 8px;
+}
+
+.balance {
+    font-size: 30px;
+    color: #e8c76b;
+    font-weight: bold;
+}
+
+.game-table {
+    background: #12613f;
+    border: 5px solid #c4a04d;
+    border-radius: 25px;
+    padding: 20px;
+    box-shadow: 0 10px 30px #0008;
+}
+
+.result {
+    text-align: center;
+    min-height: 35px;
+    font-size: 25px;
+    font-weight: bold;
+    color: #ffdf77;
+    margin-bottom: 15px;
+}
+
+.hands {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+
+.hand {
+    border-radius: 12px;
+    padding: 15px 8px;
+    text-align: center;
+    min-width: 0;
+}
+
+/* BLUE PLAYER SIDE */
+.hand:first-child {
+    background: #092d65;
+    border: 2px solid #318bff;
+    box-shadow: 0 0 12px #1675ff33;
+}
+
+/* RED BANKER SIDE */
+.hand:last-child {
+    background: #65151d;
+    border: 2px solid #ff4555;
+    box-shadow: 0 0 12px #ff243533;
+}
+
+/* PLAYER AND BANKER HEADINGS */
+.hand:first-child h2 {
+    color: #75baff;
+}
+
+.hand:last-child h2 {
+    color: #ff858d;
+}
+
+
+.hand h2 {
+    font-size: 15px;
+    letter-spacing: 2px;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    min-height: 105px;
+}
+
+.card {
+    width: 62px;
+    height: 90px;
+    border-radius: 7px;
+    padding: 6px;
+    background: #fffdf5;
+    color: #111;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 3px 8px #0006;
+}
+
+.card.red {
+    color: #d52839;
+}
+
+.card .suit {
+    text-align: center;
+    font-size: 25px;
+}
+
+.card .bottom {
+    text-align: right;
+    transform: rotate(180deg);
+}
+
+.total {
+    margin-top: 10px;
+    color: #f4d779;
+    font-size: 17px;
+}
+
+.bet-box {
+    background: #10291d;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.bet-box label {
+    display: block;
+    margin-bottom: 12px;
+    color: #e8c76b;
+    font-weight: bold;
+}
+
+.bet-options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 7px;
+    padding: 12px 18px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.bet-btn {
+    background: #203e2e;
+    color: white;
+    border: 1px solid #6e896f;
+}
+
+.bet-btn.active {
+    background: #e5c15e;
+    color: #172218;
+    border-color: #e5c15e;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.deal-btn {
+    background: #e5c15e;
+    color: #172218;
+    min-width: 150px;
+}
+
+.reset-btn {
+    background: #183e2c;
+    color: white;
+    border: 1px solid #c4a04d;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.message {
+    text-align: center;
+    color: #c1d0c6;
+    font-size: 13px;
+    margin-top: 18px;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #8fa598;
+}
+
+@media (max-width: 450px) {
+    .game-table {
+        padding: 10px;
+    }
+
+    .hands {
+        gap: 8px;
+    }
+
+    .hand {
+        padding: 10px 4px;
+    }
+
+    .card {
+        width: 45px;
+        height: 68px;
+        font-size: 15px;
+        padding: 4px;
+    }
+
+    .card .suit {
+        font-size: 19px;
+    }
+
+    .cards {
+        gap: 4px;
+        min-height: 80px;
+    }
+
+    .result {
+        font-size: 21px;
+    }
+
+    button {
+        padding: 11px 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>♠ LUCKY 9 ♠</h1>
+    <p>CLASSIC CARD GAME · PLAY FOR FUN</p>
+</header>
+
+<main class="container">
+
+    <section class="balance-box">
+        <p>YOUR PLAY CREDITS</p>
+        <div class="balance" id="balance">1,000</div>
+    </section>
+
+    <section class="game-table">
+
+        <div class="result" id="result">PLACE YOUR BET</div>
+
+        <div class="hands">
+            <div class="hand">
+                <h2>YOUR HAND</h2>
+                <div class="cards" id="playerCards"></div>
+                <div class="total">
+                    TOTAL: <strong id="playerTotal">-</strong>
+                </div>
+            </div>
+
+            <div class="hand">
+                <h2>DEALER</h2>
+                <div class="cards" id="dealerCards"></div>
+                <div class="total">
+                    TOTAL: <strong id="dealerTotal">-</strong>
+                </div>
+            </div>
+        </div>
+
+        <section class="bet-box">
+            <label>SELECT YOUR BET</label>
+
+            <div class="bet-options">
+                <button class="bet-btn active" data-bet="10"
+                    onclick="selectBet(10, this)">10</button>
+
+                <button class="bet-btn" data-bet="25"
+                    onclick="selectBet(25, this)">25</button>
+
+                <button class="bet-btn" data-bet="50"
+                    onclick="selectBet(50, this)">50</button>
+
+                <button class="bet-btn" data-bet="100"
+                    onclick="selectBet(100, this)">100</button>
+            </div>
+        </section>
+
+        <div class="controls">
+            <button class="deal-btn" id="dealBtn"
+                onclick="playGame()">DEAL CARDS</button>
+
+            <button class="reset-btn" onclick="resetGame()">
+                RESET GAME
+            </button>
+        </div>
+
+        <div class="message" id="message">
+            Choose your bet and press DEAL CARDS.<br>
+            Get closer to 9 to win!
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    Lucky 9 Demo · Virtual credits only · No real-money betting
+</footer>
+
+<script>
+let balance = 1000;
+let selectedBet = 10;
+let gameOver = true;
+
+const suits = ["♠", "♥", "♦", "♣"];
+const ranks = [
+    { name: "A", value: 1 },
+    { name: "2", value: 2 },
+    { name: "3", value: 3 },
+    { name: "4", value: 4 },
+    { name: "5", value: 5 },
+    { name: "6", value: 6 },
+    { name: "7", value: 7 },
+    { name: "8", value: 8 },
+    { name: "9", value: 9 },
+    { name: "10", value: 0 },
+    { name: "J", value: 0 },
+    { name: "Q", value: 0 },
+    { name: "K", value: 0 }
+];
+
+function updateBalance() {
+    document.getElementById("balance").textContent =
+        balance.toLocaleString();
+}
+
+function selectBet(amount, button) {
+    if (!gameOver) return;
+
+    selectedBet = amount;
+
+    document.querySelectorAll(".bet-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+    document.getElementById("result").textContent =
+        "BET: " + selectedBet + " CREDITS";
+}
+
+function createDeck() {
+    const deck = [];
+
+    for (const suit of suits) {
+        for (const rank of ranks) {
+            deck.push({
+                name: rank.name,
+                value: rank.value,
+                suit: suit
+            });
+        }
+    }
+
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+
+    return deck;
+}
+
+function getTotal(hand) {
+    return hand.reduce((sum, card) => sum + card.value, 0) % 10;
+}
+
+function showCards(hand, elementId) {
+    const container = document.getElementById(elementId);
+    container.innerHTML = "";
+
+    hand.forEach(card => {
+        const div = document.createElement("div");
+        const red = card.suit === "♥" || card.suit === "♦";
+
+        div.className = "card" + (red ? " red" : "");
+        div.innerHTML = `
+            <div>${card.name}</div>
+            <div class="suit">${card.suit}</div>
+            <div class="bottom">${card.name}</div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function playGame() {
+    if (!gameOver) return;
+
+    if (balance < selectedBet) {
+        document.getElementById("result").textContent =
+            "NOT ENOUGH CREDITS!";
+        document.getElementById("message").textContent =
+            "Press RESET GAME to restart your demo credits.";
+        return;
+    }
+
+    gameOver = false;
+    document.getElementById("dealBtn").disabled = true;
+
+    balance -= selectedBet;
+    updateBalance();
+
+    const deck = createDeck();
+    const player = [deck.pop(), deck.pop()];
+    const dealer = [deck.pop(), deck.pop()];
+
+    let playerTotal = getTotal(player);
+    let dealerTotal = getTotal(dealer);
+
+    // Lucky 9 uses baccarat-style third-card rules.
+    const natural = playerTotal >= 8 || dealerTotal >= 8;
+    let playerThirdValue = null;
+
+    if (!natural) {
+        if (playerTotal <= 5) {
+            const third = deck.pop();
+            player.push(third);
+            playerThirdValue = third.value;
+            playerTotal = getTotal(player);
+        }
+
+        if (playerThirdValue === null) {
+            if (dealerTotal <= 5) {
+                dealer.push(deck.pop());
+            }
+        } else {
+            const draw =
+                dealerTotal <= 2 ||
+                (dealerTotal === 3 && playerThirdValue !== 8) ||
+                (dealerTotal === 4 &&
+                    playerThirdValue >= 2 && playerThirdValue <= 7) ||
+                (dealerTotal === 5 &&
+                    playerThirdValue >= 4 && playerThirdValue <= 7) ||
+                (dealerTotal === 6 &&
+                    (playerThirdValue === 6 || playerThirdValue === 7));
+
+            if (draw) dealer.push(deck.pop());
+        }
+    }
+
+    playerTotal = getTotal(player);
+    dealerTotal = getTotal(dealer);
+
+    showCards(player, "playerCards");
+    showCards(dealer, "dealerCards");
+
+    document.getElementById("playerTotal").textContent = playerTotal;
+    document.getElementById("dealerTotal").textContent = dealerTotal;
+
+    if (playerTotal > dealerTotal) {
+        balance += selectedBet * 2;
+        document.getElementById("result").textContent = "🎉 YOU WON!";
+        document.getElementById("message").textContent =
+            "Congratulations! You won " + selectedBet +
+            " credits. Choose another bet to play again.";
+    } else if (playerTotal < dealerTotal) {
+        document.getElementById("result").textContent = "YOU LOSE!";
+        document.getElementById("message").textContent =
+            "The dealer has the higher total. Try another round!";
+    } else {
+        balance += selectedBet;
+        document.getElementById("result").textContent = "IT'S A TIE!";
+        document.getElementById("message").textContent =
+            "Your bet has been returned. Play another round!";
+    }
+
+    updateBalance();
+
+    gameOver = true;
+    document.getElementById("dealBtn").disabled = false;
+}
+
+function resetGame() {
+    balance = 1000;
+    selectedBet = 10;
+    gameOver = true;
+
+    updateBalance();
+
+    document.getElementById("playerCards").innerHTML = "";
+    document.getElementById("dealerCards").innerHTML = "";
+    document.getElementById("playerTotal").textContent = "-";
+    document.getElementById("dealerTotal").textContent = "-";
+    document.getElementById("result").textContent = "PLACE YOUR BET";
+    document.getElementById("message").textContent =
+        "Choose your bet and press DEAL CARDS. Get closer to 9 to win!";
+
+    document.getElementById("dealBtn").disabled = false;
+
+    document.querySelectorAll(".bet-btn").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.bet) === 10);
+    });
+}
+</script>
+
+</body>
+</html>
